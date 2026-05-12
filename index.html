@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRS Incentive Report — NTAG Southwest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="report.css">
+</head>
+<body>
+
+<!-- Lucide icon definitions -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+    <defs>
+        <symbol id="i-anchor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></symbol>
+        <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+        <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+        <symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+        <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+        <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+        <symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
+        <symbol id="i-trending-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></symbol>
+        <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+        <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+        <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+        <symbol id="i-tool" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+        <symbol id="i-database" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></symbol>
+    </defs>
+</svg>
+
+<div class="app">
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark">
+                <svg width="16" height="16"><use href="#i-anchor"/></svg>
+            </div>
+            <div class="brand-text">
+                <div class="brand-title">NTAG Southwest</div>
+                <div class="brand-sub">NRS Incentive Report // Ops Center</div>
+            </div>
+        </div>
+        <div class="topbar-meta">
+            <span class="live-pill"><span class="live-dot"></span>System Online</span>
+            <a class="topbar-link" href="tool.html" title="Open the generator tool">
+                <svg width="11" height="11"><use href="#i-tool"/></svg>
+                Tool
+            </a>
+        </div>
+    </header>
+
+    <section class="report-shell visible" id="reportOutput">
+        <div class="report" id="reportContainer">
+            <div class="rpt-header">
+                <div>
+                    <div class="rpt-title">Weekly Incentive Report</div>
+                    <div class="rpt-subtitle" id="rpt-cutoff">Loading…</div>
+                </div>
+                <div class="rpt-meta">
+                    <div class="rpt-stat">
+                        <span class="rpt-stat-label">Days Elapsed</span>
+                        <span class="rpt-stat-value" id="rpt-days-elapsed">—<span class="unit">/233</span></span>
+                    </div>
+                    <div class="rpt-stat">
+                        <span class="rpt-stat-label">Days Left</span>
+                        <span class="rpt-stat-value" id="rpt-days-left">—</span>
+                    </div>
+                    <div class="rpt-stat">
+                        <span class="rpt-stat-label">Stations</span>
+                        <span class="rpt-stat-value" id="rpt-stations">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="rpt-body"></div>
+        </div>
+    </section>
+
+    <div class="status-bar" id="statusMessage"></div>
+</div>
+
+<!-- ====================================================
+     EMBEDDED REPORT DATA
+     ====================================================
+     This block is replaced wholesale by tool.html when you
+     "Export index.html (Deploy)". Editing by hand is fine too:
+     just keep the script tag and its attributes intact.
+     ==================================================== -->
+<script id="REPORT_DATA" type="application/json">
+{
+  "reportDate": "04DEC25",
+  "generatedAt": "2025-12-04T20:00:00.000Z",
+  "processedData": [
+    {
+      "STATIONS": "SAMPLE-A",
+      "TIER": "ZEUS",
+      "LEVEL": 3,
+      "REWARD": "Recurring 96-hour special liberty",
+      "ALNAV GLIDESLOPE %": 1.65,
+      "AC GLIDESLOPE %": 1.52,
+      "NSO GLIDESLOPE %": 1.48,
+      "NF GLIDESLOPE %": 1.42,
+      "ALNAV GOAL": 100, "ALNAV ATTN": 110,
+      "AC GOAL": 60, "AC ATTN": 62,
+      "NSO GOAL": 25, "NSO ATTN": 24,
+      "NUKE GOAL": 15, "NUKE ATTN": 14,
+      "ALNAV_CHANGE_PCT": 0.04
+    },
+    {
+      "STATIONS": "SAMPLE-B",
+      "TIER": "POSEIDON", "LEVEL": 2,
+      "REWARD": "Recurring 72-hour special liberty",
+      "ALNAV GLIDESLOPE %": 1.28, "AC GLIDESLOPE %": 1.22,
+      "NSO GLIDESLOPE %": 1.25, "NF GLIDESLOPE %": 1.21,
+      "ALNAV GOAL": 100, "ALNAV ATTN": 85,
+      "AC GOAL": 60, "AC ATTN": 50,
+      "NSO GOAL": 25, "NSO ATTN": 21,
+      "NUKE GOAL": 15, "NUKE ATTN": 12,
+      "ALNAV_CHANGE_PCT": 0.02
+    },
+    {
+      "STATIONS": "SAMPLE-C",
+      "TIER": "TRITON", "LEVEL": 1,
+      "REWARD": "Polo Mondays",
+      "ALNAV GLIDESLOPE %": 1.05, "AC GLIDESLOPE %": 0.95,
+      "NSO GLIDESLOPE %": 1.02, "NF GLIDESLOPE %": 0.88,
+      "ALNAV GOAL": 100, "ALNAV ATTN": 70,
+      "AC GOAL": 60, "AC ATTN": 39,
+      "NSO GOAL": 25, "NSO ATTN": 17,
+      "NUKE GOAL": 15, "NUKE ATTN": 9,
+      "ALNAV_CHANGE_PCT": 0.01
+    },
+    {
+      "STATIONS": "SAMPLE-D",
+      "TIER": "BELOW", "LEVEL": 0, "REWARD": "",
+      "ALNAV GLIDESLOPE %": 0.85, "AC GLIDESLOPE %": 0.78,
+      "NSO GLIDESLOPE %": 0.92, "NF GLIDESLOPE %": 0.65,
+      "ALNAV GOAL": 100, "ALNAV ATTN": 56,
+      "AC GOAL": 60, "AC ATTN": 31,
+      "NSO GOAL": 25, "NSO ATTN": 15,
+      "NUKE GOAL": 15, "NUKE ATTN": 6,
+      "ALNAV_CHANGE_PCT": -0.01
+    }
+  ],
+  "historicalData": []
+}
+</script>
+
+<!-- Detail panel -->
+<div class="panel-backdrop" id="panelBackdrop"></div>
+<aside class="panel" id="panel">
+    <header class="panel-header">
+        <div class="panel-header-top">
+            <div class="panel-station" id="panelStation">—</div>
+            <button class="panel-close" id="panelClose">
+                <svg width="14" height="14"><use href="#i-x"/></svg>
+            </button>
+        </div>
+        <div class="panel-tier-tags" id="panelTags"></div>
+    </header>
+    <div class="panel-body" id="panelBody"></div>
+</aside>
+
+<script src="report.js"></script>
+<script>
+/* ============================================================
+   VIEWER — loads data.json and renders
+   ============================================================ */
+const $ = (id) => document.getElementById(id);
+
+const els = {
+    cutoff:       $('rpt-cutoff'),
+    daysElapsed:  $('rpt-days-elapsed'),
+    daysLeft:     $('rpt-days-left'),
+    stations:     $('rpt-stations'),
+    body:         $('rpt-body')
+};
+const panelEls = {
+    panel:    $('panel'),
+    backdrop: $('panelBackdrop'),
+    station:  $('panelStation'),
+    tags:     $('panelTags'),
+    body:     $('panelBody'),
+    close:    $('panelClose')
+};
+const statusMsg = $('statusMessage');
+
+function showError(msg) {
+    statusMsg.className = 'status-bar visible error';
+    statusMsg.textContent = msg;
+}
+
+(function loadAndRender() {
+    try {
+        const dataEl = document.getElementById('REPORT_DATA');
+        if (!dataEl) {
+            throw new Error('Could not find embedded data (script#REPORT_DATA missing)');
+        }
+
+        const data = JSON.parse(dataEl.textContent);
+
+        if (!data.reportDate || !Array.isArray(data.processedData)) {
+            throw new Error('Embedded data is missing required fields (reportDate, processedData)');
+        }
+
+        const state = {
+            processedData:  data.processedData,
+            historicalData: data.historicalData || [],
+            reportDate:     data.reportDate
+        };
+
+        Report.render(state, els);
+        Report.attachStationClicks(state, panelEls);
+    } catch (err) {
+        $('rpt-body').innerHTML = `
+            <div class="loader">
+                <div class="loader-text" style="color: var(--loss);">⚠ Failed to load data</div>
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--fg-muted); text-align: center; max-width: 400px;">
+                    ${Report.utils.escapeHtml(err.message)}<br><br>
+                    Re-export index.html from the <a href="tool.html" style="color: var(--triton);">tool</a>
+                    and replace this file.
+                </div>
+            </div>`;
+        console.error(err);
+    }
+})();
+
+// Panel close handlers
+panelEls.close.addEventListener('click', () => Report.closePanel(panelEls));
+panelEls.backdrop.addEventListener('click', () => Report.closePanel(panelEls));
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && panelEls.panel.classList.contains('active')) {
+        Report.closePanel(panelEls);
+    }
+});
+</script>
+
+</body>
+</html>
