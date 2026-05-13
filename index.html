@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRS Incentive Report — NTAG Southwest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+/* ============================================================
+   NTAG Southwest Incentive Report — Shared Styles
+   ============================================================ */
+
+/* Design Tokens */
+:root {
+    --bg:           #0a0e14;
+    --surface:      #11161f;
+    --surface-2:    #161c27;
+    --surface-hi:   #1c2230;
+    --border:       #1f2733;
+    --border-hi:    #2d3748;
+
+    --fg:           #e6edf3;
+    --fg-muted:     #8b95a5;
+    --fg-dim:       #5b6573;
+
+    --zeus:         #f5c518;
+    --zeus-soft:    rgba(245, 197, 24, 0.12);
+    --poseidon:     #4a90e2;
+    --poseidon-soft:rgba(74, 144, 226, 0.12);
+    --triton:       #3ac6c4;
+    --triton-soft:  rgba(58, 198, 196, 0.12);
+    --cusp:         #6b7280;
+    --cusp-soft:    rgba(107, 114, 128, 0.12);
+
+    --gain:         #3fb950;
+    --gain-soft:    rgba(63, 185, 80, 0.12);
+    --loss:         #f85149;
+    --loss-soft:    rgba(248, 81, 73, 0.10);
+    --warn:         #ff6b35;
+
+    --font-sans:    'Geist', -apple-system, system-ui, sans-serif;
+    --font-mono:    'Geist Mono', ui-monospace, 'SF Mono', monospace;
+
+    --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+    --s-5: 20px; --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px;
+
+    --r-sm: 4px; --r-md: 6px; --r-lg: 10px;
+
+    --tracking-wide:  0.08em;
+    --tracking-wider: 0.14em;
+}
+
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100vh;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    background-image:
+        linear-gradient(rgba(31, 39, 51, 0.4) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(31, 39, 51, 0.4) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: 0 0;
+}
+.num, .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+button { font-family: inherit; }
+input  { font-family: inherit; }
+
+/* App Shell */
+.app {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: var(--s-8) var(--s-6);
+}
+
+/* Top Bar */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--s-4) var(--s-5);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    margin-bottom: var(--s-8);
+}
+.brand { display: flex; align-items: center; gap: var(--s-3); }
+.brand-mark {
+    width: 28px; height: 28px;
+    display: grid; place-items: center;
+    background: var(--surface-hi);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r-sm);
+    color: var(--zeus);
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-title {
+    font-size: 13px; font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+}
+.brand-sub {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--fg-muted);
+    letter-spacing: var(--tracking-wide);
+    margin-top: 2px;
+}
+.topbar-meta {
+    display: flex; align-items: center; gap: var(--s-5);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--fg-muted);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+}
+.topbar-link {
+    color: var(--fg-muted);
+    text-decoration: none;
+    padding: 4px 10px;
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r-sm);
+    transition: all 120ms ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.topbar-link:hover {
+    color: var(--triton);
+    border-color: var(--triton);
+}
+.live-pill {
+    display: inline-flex; align-items: center; gap: var(--s-2);
+    padding: var(--s-1) var(--s-3);
+    background: var(--gain-soft);
+    border: 1px solid rgba(63, 185, 80, 0.3);
+    border-radius: var(--r-sm);
+    color: var(--gain);
+    font-weight: 500;
+}
+.live-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gain);
+    box-shadow: 0 0 8px var(--gain);
+    animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* Setup Sections (tool-only) */
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    margin-bottom: var(--s-5);
+    overflow: hidden;
+}
+.section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--s-4) var(--s-5);
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, var(--surface-2), var(--surface));
+}
+.section-title-row { display: flex; align-items: center; gap: var(--s-3); }
+.section-num {
+    font-family: var(--font-mono);
+    font-size: 10px; font-weight: 600;
+    color: var(--fg-dim);
+    letter-spacing: var(--tracking-wider);
+    padding: 2px 6px;
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r-sm);
+}
+.section-title {
+    font-size: 13px; font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+}
+.section-hint {
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--fg-dim);
+    letter-spacing: var(--tracking-wide);
+}
+.section-body { padding: var(--s-5); }
+
+/* Uploader */
+.uploader {
+    display: flex; align-items: center; gap: var(--s-4);
+    padding: var(--s-5);
+    background: var(--surface-2);
+    border: 1px dashed var(--border-hi);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    transition: all 120ms ease;
+}
+.uploader:hover {
+    border-color: var(--triton);
+    background: var(--surface-hi);
+}
+.uploader.dragging {
+    border-color: var(--triton);
+    background: var(--triton-soft);
+}
+.uploader-icon {
+    width: 36px; height: 36px;
+    display: grid; place-items: center;
+    background: var(--surface-hi);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r-sm);
+    color: var(--fg-muted);
+    flex-shrink: 0;
+}
+.uploader-text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.uploader-primary { font-size: 13px; font-weight: 500; color: var(--fg); }
+.uploader-secondary { font-family: var(--font-mono); font-size: 11px; color: var(--fg-dim); }
+.uploader-status {
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--gain);
+    padding: 2px 8px;
+    background: var(--gain-soft);
+    border: 1px solid rgba(63, 185, 80, 0.3);
+    border-radius: var(--r-sm);
+    display: none;
+}
+.uploader-status.visible { display: inline-block; }
+input[type="file"] { display: none; }
+
+/* File List */
+.file-list {
+    display: none;
+    margin-top: var(--s-4);
+    padding: var(--s-3);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+}
+.file-list.visible { display: block; }
+.file-list-header {
+    font-family: var(--font-mono);
+    font-size: 10px; color: var(--fg-muted);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    margin-bottom: var(--s-3);
+}
+.file-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--s-2);
+}
+.file-chip {
+    display: flex; align-items: center; gap: var(--s-2);
+    padding: var(--s-2) var(--s-3);
+    background: var(--surface-hi);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--fg-muted);
+}
+.file-chip-num { color: var(--fg-dim); flex-shrink: 0; }
+.file-chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Form Inputs */
+.field-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--s-4);
+}
+.field { display: flex; flex-direction: column; gap: var(--s-2); }
+.field-label {
+    font-family: var(--font-mono);
+    font-size: 10px; color: var(--fg-muted);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+}
+.field-input {
+    font-family: var(--font-mono);
+    font-size: 14px; font-weight: 500;
+    background: var(--surface-2);
+    color: var(--fg);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r-sm);
+    padding: var(--s-3) var(--s-4);
+    transition: border-color 120ms ease;
+}
+.field-input:focus { outline: none; border-color: var(--triton); }
+.field-help {
+    font-family: var(--font-mono);
+    font-size: 10px; color: var(--fg-dim);
+    letter-spacing: var(--tracking-wide);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex; align-items: center; gap: var(--s-2);
+    padding: var(--s-3) var(--s-5);
+    font-family: var(--font-mono);
+    font-size: 12px; font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    background: var(--surface-hi);
+    color: var(--fg);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    transition: all 120ms ease;
+}
+.btn:hover:not(:disabled) {
+    background: var(--surface);
+    border-color: var(--triton);
+    color: var(--triton);
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary {
+    background: var(--triton);
+    color: var(--bg);
+    border-color: var(--triton);
+}
+.btn-primary:hover:not(:disabled) {
+    background: #4ad6d4;
+    border-color: #4ad6d4;
+    color: var(--bg);
+}
+.btn-deploy {
+    background: var(--zeus);
+    color: var(--bg);
+    border-color: var(--zeus);
+}
+.btn-deploy:hover:not(:disabled) {
+    background: #ffd54a;
+    border-color: #ffd54a;
+    color: var(--bg);
+}
+.btn-row { display: flex; gap: var(--s-3); flex-wrap: wrap; }
+
+/* Status */
+.status-bar {
+    display: none;
+    padding: var(--s-3) var(--s-4);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    border-radius: var(--r-sm);
+    margin-top: var(--s-4);
+}
+.status-bar.visible { display: block; }
+.status-bar.success { background: var(--gain-soft); color: var(--gain); border: 1px solid rgba(63, 185, 80, 0.3); }
+.status-bar.error   { background: var(--loss-soft); color: var(--loss); border: 1px solid rgba(248, 81, 73, 0.3); }
+
+/* Report */
+.report-shell { display: none; margin-top: var(--s-8); }
+.report-shell.visible { display: block; }
+.report {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: var(--s-8);
+    position: relative;
+}
+.report.exporting { width: 1200px !important; max-width: 1200px !important; }
+
+.rpt-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: var(--s-4);
+    padding-bottom: var(--s-5);
+    margin-bottom: var(--s-6);
+    border-bottom: 1px solid var(--border);
+}
+.rpt-title {
+    font-size: 22px; font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+}
+.rpt-subtitle {
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--fg-muted);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+.rpt-meta { display: flex; gap: var(--s-5); }
+.rpt-stat {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
+}
+.rpt-stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px; color: var(--fg-muted);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+}
+.rpt-stat-value {
+    font-family: var(--font-mono);
+    font-size: 18px; font-weight: 600;
+    color: var(--fg);
+    font-variant-numeric: tabular-nums;
+}
+.rpt-stat-value .unit { font-size: 10px; color: var(--fg-muted); margin-left: 4px; font-weight: 400; }
+
+/* Tier Blocks */
+.tier-block { margin-bottom: var(--s-6); }
+.tier-block:last-child { margin-bottom: 0; }
+.tier-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--s-3) var(--s-4);
+    margin-bottom: var(--s-3);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent, var(--fg));
+    border-radius: var(--r-sm);
+}
+.tier-header-left { display: flex; align-items: center; gap: var(--s-3); }
+.tier-icon {
+    display: grid; place-items: center;
+    width: 28px; height: 28px;
+    background: var(--accent-soft, var(--surface-2));
+    color: var(--accent, var(--fg));
+    border-radius: var(--r-sm);
+}
+.tier-name {
+    font-size: 13px; font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+}
+.tier-rule {
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--fg-muted);
+    letter-spacing: var(--tracking-wide);
+}
+.tier-count {
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--fg-muted);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+}
+.tier-count strong { color: var(--accent, var(--fg)); font-weight: 600; }
+
+.tier-zeus     { --accent: var(--zeus);     --accent-soft: var(--zeus-soft); }
+.tier-poseidon { --accent: var(--poseidon); --accent-soft: var(--poseidon-soft); }
+.tier-triton   { --accent: var(--triton);   --accent-soft: var(--triton-soft); }
+.tier-cusp     { --accent: var(--cusp);     --accent-soft: var(--cusp-soft); }
+
+/* Stations */
+.station-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-2);
+}
+.station {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    align-items: center;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-4);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    transition: all 120ms ease;
+}
+.station:hover {
+    background: var(--surface-2);
+    border-color: var(--accent, var(--border-hi));
+}
+.station-rank {
+    font-family: var(--font-mono);
+    font-size: 12px; font-weight: 600;
+    color: var(--fg-dim);
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+.station-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.station-name {
+    font-size: 13px; font-weight: 600;
+    color: var(--fg);
+    letter-spacing: 0.02em;
+}
+.station-sub {
+    font-family: var(--font-mono);
+    font-size: 10px; color: var(--fg-muted);
+    letter-spacing: var(--tracking-wide);
+    display: flex; gap: var(--s-3); flex-wrap: wrap;
+}
+.station-sub span { white-space: nowrap; }
+.station-metrics { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.station-pct {
+    font-family: var(--font-mono);
+    font-size: 18px; font-weight: 600;
+    color: var(--accent, var(--fg));
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+}
+.station-streak {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-family: var(--font-mono);
+    font-size: 9px; font-weight: 600;
+    color: var(--warn);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+}
+
+/* Weekly Warriors */
+.warriors {
+    margin-bottom: var(--s-6);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gain);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+}
+.warriors-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--s-3) var(--s-4);
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+}
+.warriors-title { display: flex; align-items: center; gap: var(--s-3); }
+.warriors-icon { color: var(--gain); display: grid; place-items: center; }
+.warriors-name {
+    font-size: 13px; font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+}
+.warriors-rule { font-family: var(--font-mono); font-size: 11px; color: var(--fg-muted); }
+.warriors-list { display: grid; grid-template-columns: 1fr; }
+.warrior {
+    display: grid;
+    grid-template-columns: 24px 1fr auto auto;
+    align-items: center;
+    gap: var(--s-4);
+    padding: var(--s-3) var(--s-4);
+    border-bottom: 1px solid var(--border);
+}
+.warrior:last-child { border-bottom: none; }
+.warrior-rank {
+    font-family: var(--font-mono);
+    font-size: 11px; font-weight: 600;
+    color: var(--fg-muted);
+    font-variant-numeric: tabular-nums;
+}
+.warrior-name { font-size: 13px; font-weight: 500; }
+.warrior-change {
+    font-family: var(--font-mono);
+    font-size: 14px; font-weight: 600;
+    color: var(--gain);
+    font-variant-numeric: tabular-nums;
+}
+.warrior-current {
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--fg-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Detail Panel */
+.panel-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(10, 14, 20, 0.7);
+    backdrop-filter: blur(2px);
+    z-index: 90;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+}
+.panel-backdrop.active { opacity: 1; pointer-events: auto; }
+.panel {
+    position: fixed; top: 0; right: 0;
+    height: 100vh;
+    width: 480px; max-width: 100vw;
+    background: var(--surface);
+    border-left: 1px solid var(--border-hi);
+    z-index: 100;
+    transform: translateX(100%);
+    transition: transform 280ms cubic-bezier(0.32, 0.72, 0, 1);
+    display: flex; flex-direction: column;
+    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.4);
+}
+.panel.active { transform: translateX(0); }
+.panel-header {
+    padding: var(--s-5);
+    border-bottom: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: var(--s-3);
+    flex-shrink: 0;
+}
+.panel-header-top {
+    display: flex; align-items: center; justify-content: space-between;
+}
+.panel-station {
+    font-size: 18px; font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+}
+.panel-close {
+    background: transparent;
+    border: 1px solid var(--border-hi);
+    color: var(--fg-muted);
+    width: 28px; height: 28px;
+    border-radius: var(--r-sm);
+    display: grid; place-items: center;
+    cursor: pointer;
+    padding: 0;
+    transition: all 120ms ease;
+}
+.panel-close:hover { background: var(--surface-hi); color: var(--fg); }
+.panel-tier-tags { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+.panel-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px;
+    font-family: var(--font-mono);
+    font-size: 10px; font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    border-radius: var(--r-sm);
+    background: var(--accent-soft, var(--surface-hi));
+    color: var(--accent, var(--fg));
+    border: 1px solid var(--accent-soft, var(--border-hi));
+}
+.panel-tag.neutral {
+    background: var(--surface-hi);
+    color: var(--fg-muted);
+    border-color: var(--border-hi);
+}
+.panel-body {
+    padding: var(--s-5);
+    overflow-y: auto;
+    flex: 1;
+    display: flex; flex-direction: column; gap: var(--s-6);
+}
+.panel-section-title {
+    font-family: var(--font-mono);
+    font-size: 10px; font-weight: 600;
+    color: var(--fg-muted);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    margin-bottom: var(--s-3);
+    padding-bottom: var(--s-2);
+    border-bottom: 1px solid var(--border);
+}
+.panel-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-3);
+}
+.panel-stat {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: var(--s-3) var(--s-4);
+}
+.panel-stat-label {
+    font-family: var(--font-mono);
+    font-size: 9px; color: var(--fg-muted);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+.panel-stat-value {
+    font-family: var(--font-mono);
+    font-size: 22px; font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+.panel-stat-sub { font-family: var(--font-mono); font-size: 10px; color: var(--fg-dim); margin-top: 4px; }
+
+/* Bars */
+.gs-bars { display: grid; grid-template-columns: 1fr; gap: var(--s-2); }
+.gs-bar-row {
+    display: grid;
+    grid-template-columns: 50px 1fr 60px;
+    align-items: center;
+    gap: var(--s-3);
+}
+.gs-bar-label {
+    font-family: var(--font-mono);
+    font-size: 11px; font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    color: var(--fg-muted);
+}
+.gs-bar-track {
+    height: 6px;
+    background: var(--surface-2);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    position: relative;
+}
+.gs-bar-fill {
+    height: 100%;
+    border-radius: var(--r-sm);
+    transition: width 400ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.gs-bar-marker {
+    position: absolute; top: -2px; bottom: -2px;
+    width: 1px;
+    background: var(--fg-muted);
+    opacity: 0.6;
+}
+.gs-bar-pct {
+    font-family: var(--font-mono);
+    font-size: 12px; font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+/* Trend */
+.trend-chart {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: var(--s-4);
+}
+
+/* Projection */
+.projection-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-3);
+}
+.projection {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: var(--s-3);
+    text-align: center;
+}
+.projection.on-track  { border-color: rgba(63, 185, 80, 0.4); }
+.projection.off-track { border-color: rgba(248, 81, 73, 0.4); }
+.projection-date {
+    font-family: var(--font-mono);
+    font-size: 9px; color: var(--fg-muted);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    margin-bottom: var(--s-2);
+}
+.projection-num {
+    font-family: var(--font-mono);
+    font-size: 24px; font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    line-height: 1; margin-bottom: 4px;
+}
+.projection.on-track  .projection-num { color: var(--gain); }
+.projection.off-track .projection-num { color: var(--loss); }
+.projection-label {
+    font-family: var(--font-mono);
+    font-size: 9px; color: var(--fg-muted);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+}
+
+/* Mission */
+.mission {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--r-sm);
+    padding: var(--s-4);
+    margin-bottom: var(--s-3);
+}
+.mission:last-child { margin-bottom: 0; }
+.mission-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: var(--s-3);
+}
+.mission-name {
+    font-size: 12px; font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+}
+.mission-pct {
+    font-family: var(--font-mono);
+    font-size: 18px; font-weight: 600;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}
+.mission-detail-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s-3);
+    font-family: var(--font-mono);
+    font-size: 10px;
+}
+.mission-detail { display: flex; flex-direction: column; gap: 2px; }
+.mission-detail-label {
+    color: var(--fg-dim);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+}
+.mission-detail-val {
+    font-size: 13px; color: var(--fg);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Ladder */
+.ladder { display: flex; flex-direction: column; gap: var(--s-2); }
+.rung {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-4);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--r-sm);
+}
+.rung-icon { color: var(--accent); display: grid; place-items: center; }
+.rung-content { display: flex; flex-direction: column; gap: 2px; }
+.rung-title {
+    font-size: 12px; font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+}
+.rung-req { font-family: var(--font-mono); font-size: 10px; color: var(--fg-muted); }
+.rung-status {
+    font-family: var(--font-mono);
+    font-size: 9px; font-weight: 600;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: var(--r-sm);
+}
+.rung-status.current    { background: var(--gain-soft);   color: var(--gain);   border: 1px solid rgba(63, 185, 80, 0.3); }
+.rung-status.achievable { background: var(--zeus-soft);   color: var(--zeus);   border: 1px solid rgba(245, 197, 24, 0.3); }
+.rung-status.locked     { background: var(--surface-hi);  color: var(--fg-dim); border: 1px solid var(--border-hi); }
+
+/* Loading State (viewer) */
+.loader {
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: var(--s-4);
+    padding: var(--s-12) var(--s-6);
+    color: var(--fg-muted);
+}
+.loader-spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--border-hi);
+    border-top-color: var(--triton);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+.loader-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .station-grid { grid-template-columns: 1fr; }
+    .panel-stats  { grid-template-columns: 1fr; }
+    .panel        { width: 100vw; }
+    .rpt-header   { grid-template-columns: 1fr; }
+    .rpt-meta     { flex-wrap: wrap; }
+}
+
+    </style>
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+    <defs>
+        <symbol id="i-anchor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/>
+        </symbol>
+        <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </symbol>
+        <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </symbol>
+        <symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </symbol>
+        <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+        </symbol>
+        <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+        </symbol>
+        <symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+        </symbol>
+        <symbol id="i-trending-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>
+        </symbol>
+        <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+        </symbol>
+        <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </symbol>
+        <symbol id="i-files" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15.5 2H8.6c-.4 0-.8.2-1.1.5-.3.3-.5.7-.5 1.1V14c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h9.8c.4 0 .8-.2 1.1-.5.3-.3.5-.7.5-1.1V6.5L15.5 2z"/><path d="M3 7.6v12.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h11.4"/><path d="M15 2v5h5"/>
+        </symbol>
+        <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </symbol>
+        <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </symbol>
+        <symbol id="i-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+        </symbol>
+        <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+        </symbol>
+        <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+        </symbol>
+        <symbol id="i-database" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+        </symbol>
+        <symbol id="i-tool" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </symbol>
+    </defs>
+</svg>
+
+<div class="app">
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark">
+                <svg width="16" height="16"><use href="#i-anchor"/></svg>
+            </div>
+            <div class="brand-text">
+                <div class="brand-title">NTAG Southwest</div>
+                <div class="brand-sub">NRS Incentive Report // Ops Center</div>
+            </div>
+        </div>
+        <div class="topbar-meta">
+            <span class="live-pill"><span class="live-dot"></span>System Online</span>
+            <a class="topbar-link" href="tool.html" title="Open the generator tool">
+                <svg width="11" height="11"><use href="#i-tool"/></svg>
+                Tool
+            </a>
+        </div>
+    </header>
+
+    <section class="report-shell visible" id="reportOutput">
+        <div class="report" id="reportContainer">
+            <div class="rpt-header">
+                <div>
+                    <div class="rpt-title">Weekly Incentive Report</div>
+                    <div class="rpt-subtitle" id="rpt-cutoff">—</div>
+                </div>
+                <div class="rpt-meta">
+                    <div class="rpt-stat">
+                        <span class="rpt-stat-label">Days Elapsed</span>
+                        <span class="rpt-stat-value" id="rpt-days-elapsed">—<span class="unit">/233</span></span>
+                    </div>
+                    <div class="rpt-stat">
+                        <span class="rpt-stat-label">Days Left</span>
+                        <span class="rpt-stat-value" id="rpt-days-left">—</span>
+                    </div>
+                    <div class="rpt-stat">
+                        <span class="rpt-stat-label">Stations</span>
+                        <span class="rpt-stat-value" id="rpt-stations">—</span>
+                    </div>
+                </div>
+            </div>
+            <div id="rpt-body"></div>
+        </div>
+    </section>
+</div>
+
+<script id="REPORT_DATA" type="application/json">
+{
+  "reportDate": "04DEC25",
+  "generatedAt": "2026-05-13T05:04:56.181Z",
+  "processedData": [
+    {
+      "STATIONS": "SAMPLE-A",
+      "TIER": "ZEUS",
+      "LEVEL": 3,
+      "REWARD": "Recurring 96-hour special liberty",
+      "ALNAV GLIDESLOPE %": 1.65,
+      "AC GLIDESLOPE %": 1.52,
+      "NSO GLIDESLOPE %": 1.48,
+      "NF GLIDESLOPE %": 1.42,
+      "ALNAV GOAL": 100,
+      "ALNAV ATTN": 110,
+      "AC GOAL": 60,
+      "AC ATTN": 62,
+      "NSO GOAL": 25,
+      "NSO ATTN": 24,
+      "NUKE GOAL": 15,
+      "NUKE ATTN": 14,
+      "ALNAV_CHANGE_PCT": 0.04
+    },
+    {
+      "STATIONS": "SAMPLE-B",
+      "TIER": "POSEIDON",
+      "LEVEL": 2,
+      "REWARD": "Recurring 72-hour special liberty",
+      "ALNAV GLIDESLOPE %": 1.28,
+      "AC GLIDESLOPE %": 1.22,
+      "NSO GLIDESLOPE %": 1.25,
+      "NF GLIDESLOPE %": 1.21,
+      "ALNAV GOAL": 100,
+      "ALNAV ATTN": 85,
+      "AC GOAL": 60,
+      "AC ATTN": 50,
+      "NSO GOAL": 25,
+      "NSO ATTN": 21,
+      "NUKE GOAL": 15,
+      "NUKE ATTN": 12,
+      "ALNAV_CHANGE_PCT": 0.02
+    },
+    {
+      "STATIONS": "SAMPLE-C",
+      "TIER": "TRITON",
+      "LEVEL": 1,
+      "REWARD": "Polo Mondays",
+      "ALNAV GLIDESLOPE %": 1.05,
+      "AC GLIDESLOPE %": 0.95,
+      "NSO GLIDESLOPE %": 1.02,
+      "NF GLIDESLOPE %": 0.88,
+      "ALNAV GOAL": 100,
+      "ALNAV ATTN": 70,
+      "AC GOAL": 60,
+      "AC ATTN": 39,
+      "NSO GOAL": 25,
+      "NSO ATTN": 17,
+      "NUKE GOAL": 15,
+      "NUKE ATTN": 9,
+      "ALNAV_CHANGE_PCT": 0.01
+    },
+    {
+      "STATIONS": "SAMPLE-D",
+      "TIER": "BELOW",
+      "LEVEL": 0,
+      "REWARD": "",
+      "ALNAV GLIDESLOPE %": 0.85,
+      "AC GLIDESLOPE %": 0.78,
+      "NSO GLIDESLOPE %": 0.92,
+      "NF GLIDESLOPE %": 0.65,
+      "ALNAV GOAL": 100,
+      "ALNAV ATTN": 56,
+      "AC GOAL": 60,
+      "AC ATTN": 31,
+      "NSO GOAL": 25,
+      "NSO ATTN": 15,
+      "NUKE GOAL": 15,
+      "NUKE ATTN": 6,
+      "ALNAV_CHANGE_PCT": -0.01
+    }
+  ],
+  "historicalData": []
+}
+</script>
+
+<div class="panel-backdrop" id="panelBackdrop"></div>
+<aside class="panel" id="panel">
+    <header class="panel-header">
+        <div class="panel-header-top">
+            <div class="panel-station" id="panelStation">—</div>
+            <button class="panel-close" id="panelClose">
+                <svg width="14" height="14"><use href="#i-x"/></svg>
+            </button>
+        </div>
+        <div class="panel-tier-tags" id="panelTags"></div>
+    </header>
+    <div class="panel-body" id="panelBody"></div>
+</aside>
+
+<script>
+/* ============================================================
+   NTAG Southwest Incentive Report — Shared Logic
+   ============================================================
+   Loaded by BOTH index.html (viewer) and tool.html (generator).
+   Exposes a global `Report` object with the public API:
+       Report.classify(rawRow)            -> { tier, level, reward }
+       Report.processWeek(rows, prevRows) -> processedData[]
+       Report.render(state, container)    -> renders into container
+       Report.attachStationClicks(state)  -> wires station click handlers
+       Report.showPanel(station, state)   -> opens detail panel
+       Report.closePanel()                -> closes panel
+       Report.utils.*                     -> date helpers, etc.
+   ============================================================ */
+
+(function (window) {
+'use strict';
+
+/* ============================================================
+   1. CONSTANTS
+   ============================================================ */
+const TOTAL_FY_DAYS = 233;
+
+const PROD_DAY_SCHEDULE = {
+    '01OCT24': 233, '02OCT24': 232, '03OCT24': 231, '04OCT24': 230, '07OCT24': 229,
+    '08OCT24': 228, '09OCT24': 227, '10OCT24': 226, '11OCT24': 225, '14OCT24': 224,
+    '15OCT24': 223, '16OCT24': 222, '17OCT24': 221, '18OCT24': 220, '21OCT24': 219,
+    '22OCT24': 218, '23OCT24': 217, '24OCT24': 216, '25OCT24': 215, '28OCT24': 214,
+    '01NOV24': 213, '03NOV24': 212, '04NOV24': 211, '05NOV24': 210, '06NOV24': 209,
+    '07NOV24': 208, '12NOV24': 207, '13NOV24': 206, '14NOV24': 205, '17NOV24': 204,
+    '18NOV24': 203, '19NOV24': 202, '20NOV24': 201, '21NOV24': 200, '24NOV24': 199,
+    '25NOV24': 198, '26NOV24': 197,
+    '01DEC25': 197, '02DEC25': 196, '03DEC25': 195, '04DEC25': 194, '08DEC25': 193,
+    '09DEC25': 192, '10DEC25': 191, '11DEC25': 190, '12DEC25': 189, '15DEC25': 188,
+    '16DEC25': 187, '17DEC25': 186, '18DEC25': 185, '19DEC25': 184,
+    '05JAN26': 183, '06JAN26': 182, '07JAN26': 181, '08JAN26': 180, '09JAN26': 179,
+    '12JAN26': 178, '13JAN26': 177, '14JAN26': 176, '15JAN26': 175, '16JAN26': 174,
+    '20JAN26': 173, '21JAN26': 172, '22JAN26': 171, '23JAN26': 170, '26JAN26': 169,
+    '27JAN26': 168, '28JAN26': 167, '29JAN26': 166, '30JAN26': 165,
+    '02FEB26': 165, '03FEB26': 164, '04FEB26': 163, '05FEB26': 162, '06FEB26': 161,
+    '09FEB26': 160, '10FEB26': 159, '11FEB26': 158, '12FEB26': 157, '13FEB26': 156,
+    '17FEB26': 155, '18FEB26': 154, '19FEB26': 153, '20FEB26': 152, '23FEB26': 151,
+    '24FEB26': 150, '25FEB26': 149, '26FEB26': 148, '27FEB26': 147,
+    '02MAR26': 146, '03MAR26': 145, '04MAR26': 144, '05MAR26': 143, '09MAR26': 142,
+    '10MAR26': 141, '11MAR26': 140, '12MAR26': 139, '16MAR26': 138, '17MAR26': 137,
+    '18MAR26': 136, '19MAR26': 135, '20MAR26': 134, '23MAR26': 133, '24MAR26': 132,
+    '25MAR26': 131, '26MAR26': 130, '30MAR26': 129, '31MAR26': 128,
+    '01APR26': 127, '02APR26': 126, '06APR26': 125, '07APR26': 124, '08APR26': 123,
+    '09APR26': 122, '10APR26': 121, '13APR26': 120, '14APR26': 119, '15APR26': 118,
+    '16APR26': 117, '20APR26': 116, '21APR26': 115, '22APR26': 114, '23APR26': 113,
+    '24APR26': 112, '27APR26': 111, '28APR26': 110, '29APR26': 109, '30APR26': 108
+};
+
+const HOLIDAYS = ['19JAN26'];
+const WINTER_BREAK_START = new Date(2025, 11, 20);
+const WINTER_BREAK_END   = new Date(2026, 0, 4);
+const MONTH_INDEX = { JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11 };
+const MONTH_NAMES = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+const TIER_CONFIG = {
+    ZEUS:     { className: 'tier-zeus',     icon: 'i-zap',            label: 'Zeus',        rule: '≥140% ALNAV' },
+    POSEIDON: { className: 'tier-poseidon', icon: 'i-anchor',         label: 'Poseidon',    rule: '≥120% ALNAV' },
+    TRITON:   { className: 'tier-triton',   icon: 'i-shield',         label: 'Triton',      rule: '≥100% ALNAV' },
+    BELOW:    { className: 'tier-cusp',     icon: 'i-alert-triangle', label: 'On the Cusp', rule: '≥75% & <100%' }
+};
+
+/* ============================================================
+   2. DATE / PRODUCTION-DAY UTILITIES
+   ============================================================ */
+function parseReportDate(dateStr) {
+    const day = parseInt(dateStr.substring(0, 2), 10);
+    const monthStr = dateStr.substring(2, 5).toUpperCase();
+    const year = parseInt('20' + dateStr.substring(5, 7), 10);
+    return new Date(year, MONTH_INDEX[monthStr], day);
+}
+
+function formatReportDate(date) {
+    return String(date.getDate()).padStart(2, '0') +
+           MONTH_NAMES[date.getMonth()] +
+           String(date.getFullYear()).slice(-2);
+}
+
+function getProductionDayFromDate(dateStr) {
+    const lookup = dateStr.toUpperCase();
+    if (PROD_DAY_SCHEDULE[lookup] !== undefined) return PROD_DAY_SCHEDULE[lookup];
+    const FY_START = new Date(2024, 9, 1);
+    const currentDate = parseReportDate(dateStr);
+    const diffDays = Math.floor((currentDate - FY_START) / (1000 * 60 * 60 * 24));
+    return Math.max(1, (TOTAL_FY_DAYS + 1) - diffDays);
+}
+
+function addProductionDays(startDateStr, daysToAdd) {
+    let currentDate = parseReportDate(startDateStr);
+    let added = 0;
+    while (added < daysToAdd) {
+        currentDate.setDate(currentDate.getDate() + 1);
+        const dayOfWeek = currentDate.getDay();
+        const dateStr = formatReportDate(currentDate);
+        const inWinter = currentDate >= WINTER_BREAK_START && currentDate <= WINTER_BREAK_END;
+        if (dayOfWeek !== 0 && dayOfWeek !== 6 && !HOLIDAYS.includes(dateStr) && !inWinter) {
+            added++;
+        }
+    }
+    return formatReportDate(currentDate);
+}
+
+function sortHistoricalByDate(weeks) {
+    return [...weeks].sort((a, b) => parseReportDate(a.date) - parseReportDate(b.date));
+}
+
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+        '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+    }[c]));
+}
+
+function icon(name, size) {
+    return `<svg width="${size || 14}" height="${size || 14}"><use href="#${name}"/></svg>`;
+}
+
+/* ============================================================
+   3. DATA PROCESSING
+   ============================================================ */
+function classifyTier(row) {
+    const alnav = row['ALNAV GLIDESLOPE %'] || 0;
+    const ac    = row['AC GLIDESLOPE %']    || 0;
+    const nso   = row['NSO GLIDESLOPE %']   || 0;
+    const nf    = row['NUKE GLIDESLOPE %']  || 0;
+
+    let tier = 'BELOW', level = 0, reward = '';
+
+    if (alnav >= 1.40) {
+        tier = 'ZEUS';
+        if (ac >= 1.40 && nso >= 1.40 && nf >= 1.40) {
+            level = 3; reward = 'Recurring 96-hour special liberty';
+        } else if (((ac >= 1.0) + (nso >= 1.0) + (nf >= 1.0)) >= 2) {
+            level = 2; reward = 'Recurring 72-hour special liberty';
+        } else {
+            level = 1; reward = '96-hour special liberty (one time per quarter)';
+        }
+    } else if (alnav >= 1.20) {
+        tier = 'POSEIDON';
+        if (ac >= 1.20 && nso >= 1.20 && nf >= 1.20) {
+            level = 2; reward = 'Recurring 72-hour special liberty';
+        } else {
+            level = 1; reward = '96-hour special liberty (one time per quarter)';
+        }
+    } else if (alnav >= 1.00) {
+        tier = 'TRITON';
+        if (ac >= 1.0 && nso >= 1.0 && nf >= 1.0) {
+            level = 2; reward = '1x 72-hour special liberty';
+        } else {
+            level = 1; reward = 'Polo Mondays';
+        }
+    }
+    return { tier, level, reward };
+}
+
+function processWeek(rows, prevRows) {
+    const prevMap = {};
+    if (prevRows) {
+        prevRows
+            .filter(r => r['STATIONS'] && r['STATIONS'].toString().trim())
+            .forEach(r => {
+                prevMap[r['STATIONS'].toString().trim()] = r['ALNAV GLIDESLOPE %'] || 0;
+            });
+    }
+
+    const processed = rows
+        .filter(r => r['STATIONS'] && r['STATIONS'].toString().trim())
+        .map(r => {
+            const stationName = r['STATIONS'].toString().trim();
+            const alnav = r['ALNAV GLIDESLOPE %'] || 0;
+            const { tier, level, reward } = classifyTier(r);
+            const change = prevMap[stationName] !== undefined ? alnav - prevMap[stationName] : 0;
+            return {
+                ...r,
+                STATIONS: stationName,
+                TIER: tier,
+                LEVEL: level,
+                REWARD: reward,
+                'ALNAV GLIDESLOPE %': alnav,
+                'AC GLIDESLOPE %':  r['AC GLIDESLOPE %']  || 0,
+                'NSO GLIDESLOPE %': r['NSO GLIDESLOPE %'] || 0,
+                'NF GLIDESLOPE %':  r['NUKE GLIDESLOPE %'] || 0,
+                ALNAV_CHANGE_PCT: change
+            };
+        });
+
+    processed.sort((a, b) => b['ALNAV GLIDESLOPE %'] - a['ALNAV GLIDESLOPE %']);
+    return processed;
+}
+
+function calculateHotStreak(station, historical) {
+    if (!historical || historical.length === 0) return 0;
+    const sorted = sortHistoricalByDate(historical);
+    const history = [];
+    sorted.forEach(week => {
+        const hist = week.stations.find(s => s.name === station.STATIONS);
+        if (hist) history.push(hist.alnav_glideslope_pct);
+    });
+    history.push(station['ALNAV GLIDESLOPE %']);
+    let streak = 0;
+    for (let i = history.length - 1; i > 0; i--) {
+        if (history[i] > history[i - 1]) streak++;
+        else break;
+    }
+    return streak;
+}
+
+/* ============================================================
+   4. REPORT RENDERING
+   ============================================================
+   `state` shape:
+   {
+     processedData:    [...],   // current-week classified stations
+     historicalData:   [...],   // [{ week, date, stations: [{name, alnav_glideslope_pct}] }]
+     reportDate:       '04DEC25'
+   }
+   ============================================================ */
+function render(state, els) {
+    const { processedData, historicalData, reportDate } = state;
+    const cutoff = (reportDate || '').toUpperCase();
+    const calcDay = getProductionDayFromDate(cutoff);
+
+    if (els.cutoff)       els.cutoff.textContent       = `Cutoff ${cutoff} · FY26`;
+    if (els.daysElapsed)  els.daysElapsed.innerHTML    = `${TOTAL_FY_DAYS - calcDay}<span class="unit">/${TOTAL_FY_DAYS}</span>`;
+    if (els.daysLeft)     els.daysLeft.textContent     = calcDay;
+    if (els.stations)     els.stations.textContent     = processedData.length;
+
+    let html = '';
+    html += renderWeeklyWarriors(processedData);
+    const tiers = ['ZEUS', 'POSEIDON', 'TRITON'];
+    let rank = 1;
+    tiers.forEach(t => {
+        const list = processedData.filter(s => s.TIER === t);
+        html += renderTier(t, list, rank, historicalData);
+        rank += list.length;
+    });
+    const cusp = processedData.filter(s => s.TIER === 'BELOW' && s['ALNAV GLIDESLOPE %'] >= 0.75);
+    html += renderTier('BELOW', cusp, rank, historicalData);
+
+    els.body.innerHTML = html;
+}
+
+function renderWeeklyWarriors(processedData) {
+    const warriors = processedData
+        .filter(s => s.ALNAV_CHANGE_PCT > 0)
+        .sort((a, b) => b.ALNAV_CHANGE_PCT - a.ALNAV_CHANGE_PCT)
+        .slice(0, 5);
+    if (warriors.length === 0) return '';
+
+    const rows = warriors.map((w, i) => `
+        <div class="warrior">
+            <span class="warrior-rank">${String(i + 1).padStart(2, '0')}</span>
+            <span class="warrior-name">NRS ${escapeHtml(w.STATIONS)}</span>
+            <span class="warrior-change">+${(w.ALNAV_CHANGE_PCT * 100).toFixed(1)}%</span>
+            <span class="warrior-current">→ ${(w['ALNAV GLIDESLOPE %'] * 100).toFixed(1)}%</span>
+        </div>`).join('');
+
+    return `
+        <div class="warriors">
+            <div class="warriors-header">
+                <div class="warriors-title">
+                    <span class="warriors-icon">${icon('i-trophy', 16)}</span>
+                    <span class="warriors-name">Weekly Warriors</span>
+                </div>
+                <span class="warriors-rule">Top ${warriors.length} · biggest week-over-week glideslope gain</span>
+            </div>
+            <div class="warriors-list">${rows}</div>
+        </div>`;
+}
+
+function renderTier(tierKey, stations, startRank, historical) {
+    if (stations.length === 0) return '';
+    const cfg = TIER_CONFIG[tierKey];
+    const cards = stations.map((s, i) => renderStation(s, startRank + i, historical)).join('');
+    return `
+        <div class="tier-block ${cfg.className}">
+            <div class="tier-header">
+                <div class="tier-header-left">
+                    <span class="tier-icon">${icon(cfg.icon, 16)}</span>
+                    <span class="tier-name">${cfg.label}</span>
+                    <span class="tier-rule">${cfg.rule}</span>
+                </div>
+                <span class="tier-count"><strong>${stations.length}</strong> Station${stations.length === 1 ? '' : 's'}</span>
+            </div>
+            <div class="station-grid">${cards}</div>
+        </div>`;
+}
+
+function renderStation(station, rank, historical) {
+    const pct = station['ALNAV GLIDESLOPE %'] * 100;
+    const acPct  = (station['AC GLIDESLOPE %']  * 100).toFixed(0);
+    const nfPct  = (station['NF GLIDESLOPE %']  * 100).toFixed(0);
+    const nsoPct = (station['NSO GLIDESLOPE %'] * 100).toFixed(0);
+    const streak = calculateHotStreak(station, historical);
+    const stationKey = encodeURIComponent(station.STATIONS);
+
+    const streakHtml = streak >= 2
+        ? `<span class="station-streak">${icon('i-flame', 9)} × ${streak}</span>`
+        : '';
+
+    return `
+        <div class="station" data-station="${stationKey}">
+            <span class="station-rank">${String(rank).padStart(2, '0')}</span>
+            <div class="station-info">
+                <div class="station-name">NRS ${escapeHtml(station.STATIONS)}</div>
+                <div class="station-sub">
+                    <span>AC ${acPct}%</span>
+                    <span>NF ${nfPct}%</span>
+                    <span>NSO ${nsoPct}%</span>
+                </div>
+            </div>
+            <div class="station-metrics">
+                <span class="station-pct">${pct.toFixed(1)}%</span>
+                ${streakHtml}
+            </div>
+        </div>`;
+}
+
+function attachStationClicks(state, panelEls) {
+    document.querySelectorAll('.station').forEach(el => {
+        el.addEventListener('click', () => {
+            const key = decodeURIComponent(el.dataset.station);
+            const station = state.processedData.find(s => s.STATIONS === key);
+            if (station) showPanel(station, state, panelEls);
+        });
+    });
+}
+
+/* ============================================================
+   5. STATION DETAIL PANEL
+   ============================================================ */
+function showPanel(station, state, els) {
+    const { processedData, historicalData, reportDate } = state;
+    els.station.textContent = `NRS ${station.STATIONS}`;
+
+    const cfg = TIER_CONFIG[station.TIER];
+    const tierLabel = station.TIER === 'BELOW' ? 'On the Cusp' : `${cfg.label} L${station.LEVEL}`;
+    const accentVar = station.TIER === 'BELOW' ? 'cusp' : station.TIER.toLowerCase();
+    const tags = [
+        `<span class="panel-tag ${cfg.className}" style="--accent: var(--${accentVar}); --accent-soft: var(--${accentVar}-soft);">${icon(cfg.icon, 10)} ${tierLabel}</span>`
+    ];
+    if (station.REWARD) {
+        tags.push(`<span class="panel-tag neutral">${icon('i-target', 10)} ${escapeHtml(station.REWARD)}</span>`);
+    }
+    els.tags.innerHTML = tags.join('');
+
+    const cutoff   = (reportDate || '').toUpperCase();
+    const nextDate = addProductionDays(cutoff, 5);
+    const future   = addProductionDays(cutoff, 10);
+    const nextDay  = getProductionDayFromDate(nextDate);
+    const futDay   = getProductionDayFromDate(future);
+
+    const sections = [
+        renderPanelStats(station, processedData, historicalData),
+        renderPanelBars(station),
+        renderPanelTrend(station, cutoff, historicalData),
+        renderPanelProjection(station, nextDate, future, nextDay, futDay),
+        renderPanelInsights(station, cutoff, historicalData),
+        renderPanelMissions(station, nextDate, future, nextDay, futDay),
+        renderPanelLadder(station)
+    ].filter(Boolean);
+
+    els.body.innerHTML = sections.join('');
+    els.panel.classList.add('active');
+    els.backdrop.classList.add('active');
+}
+
+function closePanel(els) {
+    els.panel.classList.remove('active');
+    els.backdrop.classList.remove('active');
+}
+
+function calcRankChange(station, processedData, historical) {
+    if (!historical || historical.length === 0) return { text: '—', delta: 0 };
+    const sorted = sortHistoricalByDate(historical);
+    const last = sorted[sorted.length - 1];
+    if (!last) return { text: '—', delta: 0 };
+    const lastSorted = [...last.stations].sort((a, b) => b.alnav_glideslope_pct - a.alnav_glideslope_pct);
+    const lastRank = lastSorted.findIndex(s => s.name === station.STATIONS) + 1;
+    if (lastRank === 0) return { text: '—', delta: 0 };
+    const currentRank = processedData.findIndex(s => s.STATIONS === station.STATIONS) + 1;
+    const delta = lastRank - currentRank;
+    if (delta > 0) return { text: `+${delta}`, delta };
+    if (delta < 0) return { text: `${delta}`,  delta };
+    return { text: '0', delta: 0 };
+}
+
+function renderPanelStats(station, processedData, historical) {
+    const pct = station['ALNAV GLIDESLOPE %'] * 100;
+    const accentVar = station.TIER === 'BELOW' ? 'cusp' : station.TIER.toLowerCase();
+    const currentRank = processedData.findIndex(s => s.STATIONS === station.STATIONS) + 1;
+    const rankInfo = calcRankChange(station, processedData, historical);
+    const change = station.ALNAV_CHANGE_PCT;
+
+    const rankIconKey = rankInfo.delta > 0 ? 'i-trending-up' : rankInfo.delta < 0 ? 'i-trending-down' : 'i-minus';
+    const rankColor   = rankInfo.delta > 0 ? 'var(--gain)' : rankInfo.delta < 0 ? 'var(--loss)' : 'var(--fg-muted)';
+
+    let changeHtml = '';
+    if (change !== 0) {
+        const changeColor = change > 0 ? 'var(--gain)' : 'var(--loss)';
+        const changeIcon  = change > 0 ? 'i-trending-up' : 'i-trending-down';
+        changeHtml = `
+            <div class="panel-stat">
+                <div class="panel-stat-label">Δ vs last week</div>
+                <div class="panel-stat-value" style="color: ${changeColor}; display: flex; align-items: center; gap: 6px;">
+                    ${icon(changeIcon, 16)}
+                    ${change > 0 ? '+' : ''}${(change * 100).toFixed(1)}%
+                </div>
+                <div class="panel-stat-sub">since prior cutoff</div>
+            </div>`;
+    }
+
+    return `
+        <div class="panel-stats">
+            <div class="panel-stat">
+                <div class="panel-stat-label">ALNAV Glideslope</div>
+                <div class="panel-stat-value" style="color: var(--${accentVar});">${pct.toFixed(1)}%</div>
+                <div class="panel-stat-sub">${station['ALNAV ATTN'] || 0} of ${station['ALNAV GOAL'] || 0} contracts</div>
+            </div>
+            <div class="panel-stat">
+                <div class="panel-stat-label">Rank</div>
+                <div class="panel-stat-value">#${currentRank}</div>
+                <div class="panel-stat-sub">of ${processedData.length} stations</div>
+            </div>
+            <div class="panel-stat">
+                <div class="panel-stat-label">Position</div>
+                <div class="panel-stat-value" style="color: ${rankColor}; display: flex; align-items: center; gap: 6px;">
+                    ${icon(rankIconKey, 16)} ${rankInfo.text}
+                </div>
+                <div class="panel-stat-sub">vs. last week</div>
+            </div>
+            ${changeHtml}
+        </div>`;
+}
+
+function renderPanelBars(station) {
+    const bars = [
+        { label: 'AC',  value: station['AC GLIDESLOPE %']  },
+        { label: 'NSO', value: station['NSO GLIDESLOPE %'] },
+        { label: 'NF',  value: station['NF GLIDESLOPE %']  }
+    ];
+    const max = 200;
+    const rows = bars.map(b => {
+        const pct = b.value * 100;
+        const width = Math.min(pct, max) / max * 100;
+        const color = b.value >= 1.0 ? 'var(--gain)' : 'var(--loss)';
+        return `
+            <div class="gs-bar-row">
+                <span class="gs-bar-label">${b.label}</span>
+                <div class="gs-bar-track">
+                    <div class="gs-bar-fill" style="width: ${width}%; background: ${color};"></div>
+                    <span class="gs-bar-marker" style="left: 50%;"></span>
+                </div>
+                <span class="gs-bar-pct" style="color: ${color};">${pct.toFixed(0)}%</span>
+            </div>`;
+    }).join('');
+
+    return `
+        <div>
+            <div class="panel-section-title">Glideslope · Sub-goals</div>
+            <div class="gs-bars">${rows}</div>
+            <div style="font-family: var(--font-mono); font-size: 9px; color: var(--fg-dim); letter-spacing: var(--tracking-wide); text-align: right; margin-top: 8px;">
+                MARKER = 100% · SCALE = 0–200%
+            </div>
+        </div>`;
+}
+
+function renderPanelTrend(station, cutoff, historical) {
+    if (!historical || historical.length === 0) return '';
+    const sorted = sortHistoricalByDate(historical);
+    const history = [];
+    sorted.forEach(week => {
+        const hist = week.stations.find(s => s.name === station.STATIONS);
+        if (hist) history.push({ date: week.date, value: hist.alnav_glideslope_pct });
+    });
+    history.push({ date: cutoff, value: station['ALNAV GLIDESLOPE %'] });
+    if (history.length < 2) return '';
+
+    const values = history.map(h => h.value);
+    const minD = Math.min(...values);
+    const maxD = Math.max(...values);
+    const range = maxD - minD || 0.1;
+    const minPct = Math.max(0, minD - range * 0.2);
+    const maxPct = maxD + range * 0.2;
+
+    const W = 400, H = 140, M = { l: 32, r: 12, t: 12, b: 22 };
+    const innerW = W - M.l - M.r;
+    const innerH = H - M.t - M.b;
+    const xStep = innerW / (history.length - 1);
+
+    let path = '';
+    let points = '';
+    history.forEach((h, i) => {
+        const x = M.l + i * xStep;
+        const norm = (h.value - minPct) / (maxPct - minPct);
+        const y = M.t + innerH - (norm * innerH);
+        path += (i === 0 ? `M${x},${y}` : ` L${x},${y}`);
+        const ptColor = h.value >= 1.0 ? 'var(--gain)' : 'var(--loss)';
+        points += `<circle cx="${x}" cy="${y}" r="3" fill="${ptColor}" stroke="var(--surface-2)" stroke-width="2"/>`;
+        if (i === 0 || i === history.length - 1 || (history.length > 4 && i === Math.floor(history.length / 2))) {
+            points += `<text x="${x}" y="${H - 6}" fill="var(--fg-dim)" font-family="Geist Mono" font-size="9" text-anchor="middle">${h.date}</text>`;
+        }
+    });
+
+    const lineColor = history[history.length - 1].value >= 1.0 ? 'var(--gain)' : 'var(--loss)';
+    let refLine = '';
+    if (minPct <= 1.0 && maxPct >= 1.0) {
+        const refY = M.t + innerH - ((1.0 - minPct) / (maxPct - minPct) * innerH);
+        refLine = `
+            <line x1="${M.l}" y1="${refY}" x2="${W - M.r}" y2="${refY}"
+                  stroke="var(--fg-muted)" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+            <text x="${W - M.r - 2}" y="${refY - 3}" fill="var(--fg-muted)" font-family="Geist Mono" font-size="9" text-anchor="end">100%</text>`;
+    }
+    const yLabels = `
+        <text x="${M.l - 6}" y="${M.t + 4}"        fill="var(--fg-dim)" font-family="Geist Mono" font-size="9" text-anchor="end">${(maxPct * 100).toFixed(0)}%</text>
+        <text x="${M.l - 6}" y="${M.t + innerH + 4}" fill="var(--fg-dim)" font-family="Geist Mono" font-size="9" text-anchor="end">${(minPct * 100).toFixed(0)}%</text>`;
+
+    return `
+        <div>
+            <div class="panel-section-title">${history.length}-Week Trend</div>
+            <div class="trend-chart">
+                <svg width="100%" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+                    ${refLine}
+                    ${yLabels}
+                    <path d="${path}" stroke="${lineColor}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    ${points}
+                </svg>
+            </div>
+        </div>`;
+}
+
+function renderPanelProjection(station, nextDate, future, nextDay, futDay) {
+    const currentALNAV = station['ALNAV GLIDESLOPE %'] * 100;
+    const goal = station['ALNAV GOAL'] || 0;
+    const attn = station['ALNAV ATTN'] || 0;
+
+    let nextPct, label;
+    if (currentALNAV < 100)      { nextPct = 100; label = 'Reach Triton'; }
+    else if (currentALNAV < 120) { nextPct = 120; label = 'Reach Poseidon'; }
+    else if (currentALNAV < 140) { nextPct = 140; label = 'Reach Zeus'; }
+    else                         { nextPct = 140; label = 'Maintain Zeus'; }
+
+    const elapsedNext = (TOTAL_FY_DAYS - nextDay) + 1;
+    const elapsedFut  = (TOTAL_FY_DAYS - futDay)  + 1;
+    const tgtNext = Math.ceil(goal * (elapsedNext / TOTAL_FY_DAYS) * (nextPct / 100));
+    const tgtFut  = Math.ceil(goal * (elapsedFut  / TOTAL_FY_DAYS) * (nextPct / 100));
+    const needNext = Math.max(0, tgtNext - attn);
+    const needFut  = Math.max(0, tgtFut  - attn);
+
+    const card = (date, need, target) => `
+        <div class="projection ${need === 0 ? 'on-track' : 'off-track'}">
+            <div class="projection-date">By ${date}</div>
+            <div class="projection-num">${need === 0 ? target : need}</div>
+            <div class="projection-label">${need === 0 ? '✓ On Track' : 'Contracts Needed'}</div>
+        </div>`;
+
+    return `
+        <div>
+            <div class="panel-section-title">Next Goal · ${label}</div>
+            <div class="projection-grid">
+                ${card(nextDate, needNext, tgtNext)}
+                ${card(future,   needFut,  tgtFut)}
+            </div>
+        </div>`;
+}
+
+function renderPanelInsights(station, cutoff, historical) {
+    if (!historical || historical.length === 0) return '';
+    const sorted = sortHistoricalByDate(historical);
+    const history = [];
+    sorted.forEach(week => {
+        const hist = week.stations.find(s => s.name === station.STATIONS);
+        if (hist) history.push({ date: week.date, pct: hist.alnav_glideslope_pct * 100 });
+    });
+    history.push({ date: cutoff, pct: station['ALNAV GLIDESLOPE %'] * 100 });
+
+    let best = history[0], sum = 0, longestStreak = 0, currentStreak = 0;
+    history.forEach((w, i) => {
+        if (w.pct > best.pct) best = w;
+        sum += w.pct;
+        if (i > 0 && w.pct > history[i - 1].pct) {
+            currentStreak++;
+            if (currentStreak > longestStreak) longestStreak = currentStreak;
+        } else currentStreak = 0;
+    });
+    const avg = sum / history.length;
+
+    return `
+        <div>
+            <div class="panel-section-title">Historical · ${history.length} Weeks</div>
+            <div class="panel-stats">
+                <div class="panel-stat">
+                    <div class="panel-stat-label">Best Week</div>
+                    <div class="panel-stat-value" style="color: var(--gain);">${best.pct.toFixed(1)}%</div>
+                    <div class="panel-stat-sub">${best.date}</div>
+                </div>
+                <div class="panel-stat">
+                    <div class="panel-stat-label">Longest Streak</div>
+                    <div class="panel-stat-value">${longestStreak}<span style="font-size: 11px; color: var(--fg-muted); margin-left: 4px;">wk</span></div>
+                    <div class="panel-stat-sub">consecutive gains</div>
+                </div>
+                <div class="panel-stat">
+                    <div class="panel-stat-label">Average</div>
+                    <div class="panel-stat-value" style="color: var(--triton);">${avg.toFixed(1)}%</div>
+                    <div class="panel-stat-sub">over ${history.length} weeks</div>
+                </div>
+            </div>
+        </div>`;
+}
+
+function renderPanelMissions(station, nextDate, future, nextDay, futDay) {
+    const missions = [
+        { name: 'Active Component', short: 'AC', pct: station['AC GLIDESLOPE %']  * 100, attn: station['AC ATTN']   || 0, goal: station['AC GOAL']   || 0, accent: 'var(--poseidon)' },
+        { name: 'Nuclear Field',     short: 'NF', pct: station['NF GLIDESLOPE %']  * 100, attn: station['NUKE ATTN'] || 0, goal: station['NUKE GOAL'] || 0, accent: 'var(--zeus)' },
+        { name: 'Navy Special Ops',  short: 'NSO',pct: station['NSO GLIDESLOPE %'] * 100, attn: station['NSO ATTN']  || 0, goal: station['NSO GOAL']  || 0, accent: 'var(--gain)' }
+    ];
+    const nextGS = ((TOTAL_FY_DAYS - nextDay) + 1) / TOTAL_FY_DAYS;
+    const futGS  = ((TOTAL_FY_DAYS - futDay)  + 1) / TOTAL_FY_DAYS;
+
+    const cards = missions.map(m => {
+        const tgtN = Math.ceil(m.goal * nextGS);
+        const tgtF = Math.ceil(m.goal * futGS);
+        const needN = Math.max(0, tgtN - m.attn);
+        const needF = Math.max(0, tgtF - m.attn);
+        return `
+            <div class="mission" style="--accent: ${m.accent};">
+                <div class="mission-head">
+                    <span class="mission-name">${m.name} <span style="color: var(--fg-dim); font-family: var(--font-mono); font-size: 10px; margin-left: 4px;">${m.short}</span></span>
+                    <span class="mission-pct">${m.pct.toFixed(0)}%</span>
+                </div>
+                <div class="mission-detail-row">
+                    <div class="mission-detail">
+                        <span class="mission-detail-label">Current</span>
+                        <span class="mission-detail-val">${m.attn}/${m.goal}</span>
+                    </div>
+                    <div class="mission-detail">
+                        <span class="mission-detail-label">${nextDate}</span>
+                        <span class="mission-detail-val" style="color: ${needN === 0 ? 'var(--gain)' : 'var(--loss)'};">${needN === 0 ? '✓' : `+${needN}`}</span>
+                    </div>
+                    <div class="mission-detail">
+                        <span class="mission-detail-label">${future}</span>
+                        <span class="mission-detail-val" style="color: ${needF === 0 ? 'var(--gain)' : 'var(--loss)'};">${needF === 0 ? '✓' : `+${needF}`}</span>
+                    </div>
+                </div>
+            </div>`;
+    }).join('');
+
+    return `<div><div class="panel-section-title">Mission Areas</div>${cards}</div>`;
+}
+
+function renderPanelLadder(station) {
+    const a = station['ALNAV GLIDESLOPE %'];
+    const ac = station['AC GLIDESLOPE %'];
+    const nso = station['NSO GLIDESLOPE %'];
+    const nf  = station['NF GLIDESLOPE %'];
+
+    const zeusL3 = (a >= 1.4 && ac >= 1.4 && nso >= 1.4 && nf >= 1.4) ? 'current' : 'locked';
+    const zeusL2 = (a >= 1.4 && ((ac >= 1.0) + (nso >= 1.0) + (nf >= 1.0)) >= 2)
+        ? (zeusL3 === 'current' ? 'locked' : 'current') : 'achievable';
+    const zeusL1 = a >= 1.4 ? (zeusL3 === 'current' || zeusL2 === 'current' ? 'locked' : 'current') : 'achievable';
+    const posL2 = (a >= 1.2 && ac >= 1.2 && nso >= 1.2 && nf >= 1.2) ? 'current' : 'achievable';
+    const posL1 = a >= 1.2 ? (posL2 === 'current' ? 'locked' : 'current') : 'achievable';
+    const triL2 = (a >= 1.0 && ac >= 1.0 && nso >= 1.0 && nf >= 1.0) ? 'current' : 'achievable';
+    const triL1 = a >= 1.0 ? (triL2 === 'current' ? 'locked' : 'current') : 'achievable';
+
+    const rung = (accent, iconName, title, status, req, reward) => `
+        <div class="rung" style="--accent: ${accent};">
+            <span class="rung-icon">${icon(iconName, 14)}</span>
+            <div class="rung-content">
+                <span class="rung-title">${title}</span>
+                <span class="rung-req">${req} · ${reward}</span>
+            </div>
+            <span class="rung-status ${status}">${status}</span>
+        </div>`;
+
+    return `
+        <div>
+            <div class="panel-section-title">Tier Ladder</div>
+            <div class="ladder">
+                ${rung('var(--zeus)',    'i-zap',    'Zeus L3',     zeusL3, '≥140% all subgoals',         '96h liberty (recurring)')}
+                ${rung('var(--zeus)',    'i-zap',    'Zeus L2',     zeusL2, '≥140% ALNAV + 2 of 3 ≥100%', '72h liberty (recurring)')}
+                ${rung('var(--zeus)',    'i-zap',    'Zeus L1',     zeusL1, '≥140% ALNAV',                '96h liberty (1× quarter)')}
+                ${rung('var(--poseidon)','i-anchor','Poseidon L2', posL2,  '≥120% all subgoals',          '72h liberty (recurring)')}
+                ${rung('var(--poseidon)','i-anchor','Poseidon L1', posL1,  '≥120% ALNAV',                 '96h liberty (1× quarter)')}
+                ${rung('var(--triton)',  'i-shield','Triton L2',   triL2,  '≥100% all subgoals',          '72h liberty (1×)')}
+                ${rung('var(--triton)',  'i-shield','Triton L1',   triL1,  '≥100% ALNAV',                 'Polo Mondays')}
+            </div>
+        </div>`;
+}
+
+/* ============================================================
+   6. PUBLIC API
+   ============================================================ */
+window.Report = {
+    classify: classifyTier,
+    processWeek,
+    render,
+    attachStationClicks,
+    showPanel,
+    closePanel,
+    utils: {
+        parseReportDate,
+        formatReportDate,
+        getProductionDayFromDate,
+        addProductionDays,
+        sortHistoricalByDate,
+        calculateHotStreak,
+        escapeHtml,
+        icon,
+        TIER_CONFIG,
+        TOTAL_FY_DAYS
+    }
+};
+
+})(window);
+
+</script>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const els = {
+    cutoff: $('rpt-cutoff'), daysElapsed: $('rpt-days-elapsed'),
+    daysLeft: $('rpt-days-left'), stations: $('rpt-stations'), body: $('rpt-body')
+};
+const panelEls = {
+    panel: $('panel'), backdrop: $('panelBackdrop'),
+    station: $('panelStation'), tags: $('panelTags'),
+    body: $('panelBody'), close: $('panelClose')
+};
+
+(function loadAndRender() {
+    try {
+        const dataEl = document.getElementById('REPORT_DATA');
+        if (!dataEl) throw new Error('Embedded data not found');
+        const data = JSON.parse(dataEl.textContent);
+        if (!data.reportDate || !Array.isArray(data.processedData)) {
+            throw new Error('Embedded data is missing required fields');
+        }
+        const state = {
+            processedData: data.processedData,
+            historicalData: data.historicalData || [],
+            reportDate: data.reportDate
+        };
+        Report.render(state, els);
+        Report.attachStationClicks(state, panelEls);
+    } catch (err) {
+        $('rpt-body').innerHTML = '<div class="loader"><div class="loader-text" style="color: var(--loss);">⚠ ' + Report.utils.escapeHtml(err.message) + '</div></div>';
+    }
+})();
+
+panelEls.close.addEventListener('click', () => Report.closePanel(panelEls));
+panelEls.backdrop.addEventListener('click', () => Report.closePanel(panelEls));
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && panelEls.panel.classList.contains('active')) Report.closePanel(panelEls);
+});
+</script>
+</body>
+</html>
